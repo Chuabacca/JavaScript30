@@ -15,6 +15,51 @@
         <div class="hand second-hand"></div>
       </div>
     </div>
+    <div class="binary off">
+      <div class="hours">
+        <div class="tens">
+          <div class="hidden spacing"></div>
+          <div class="hidden spacing"></div>
+          <div class="two spacing"></div>
+          <div class="one spacing"></div>
+        </div>
+        <div class="ones">
+          <div class="eight spacing"></div>
+          <div class="four spacing"></div>
+          <div class="two spacing"></div>
+          <div class="one spacing"></div>
+        </div>
+      </div>
+      <div class="minutes">
+        <div class="tens">
+          <div class="hidden spacing"></div>
+          <div class="four spacing"></div>
+          <div class="two spacing"></div>
+          <div class="one spacing"></div>
+        </div>
+        <div class="ones">
+          <div class="eight spacing"></div>
+          <div class="four spacing"></div>
+          <div class="two spacing"></div>
+          <div class="one spacing"></div>
+        </div>
+      </div>
+      <div class="seconds">
+        <div class="tens">
+          <div class="hidden spacing"></div>
+          <div class="four spacing"></div>
+          <div class="two spacing"></div>
+          <div class="one spacing"></div>
+        </div>
+        <div class="ones">
+          <div class="eight spacing"></div>
+          <div class="four spacing"></div>
+          <div class="two spacing"></div>
+          <div class="one spacing"></div>
+        </div>
+      </div>
+    </div>
+    <div class="button">MODE</div>
 
 
   <style>
@@ -35,14 +80,59 @@
       align-items: center;
     }
 
+    .binary {
+      position: absolute;
+      left: 50%;
+      margin-left: -168px;
+    }
+
+    .hours, .minutes, .seconds, .tens, .ones {
+      float: left;
+    }
+
+    .active {
+      box-shadow: inset 0 0 10px white, 0 0 15px white;
+    }
+    
+    .spacing {
+      width: 20px;
+      height: 20px;
+      border: 3px solid white;
+      border-radius: 50%;
+      margin: 15px;
+      transition: all 0.2s;
+    }
+
+    .hidden {
+      border: none;
+      margin: 15px;
+      padding: 3px;
+    }
+
+    .button {
+      border-radius: 10px;
+      left: 50%;
+      top: 75%;
+      border: 6px solid #ffffff;
+      color: #ffffff;
+      cursor: pointer;
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-left: -7rem;
+      padding: 20px 0px;
+      position: absolute;
+      text-align: center;
+      width: 14rem;
+    }
+
     .center {
       width: 8px;
       height: 8px;
       background: #BBBBBB;
       border-radius: 50%;
       position: relative;
-      top: 49%;
-      left: 49%;
+      top: 148px;
+      left: 146px;
       z-index: 1;
     }
 
@@ -95,28 +185,208 @@
       left: 10%;
     }
 
+    .off {
+      display: none;
+    }
+
   </style>
 
   <script>
+    // Select elements for analogue clock
+    const clock = document.querySelector('.clock');
     const secondHand = document.querySelector('.second-hand');
     const minHand = document.querySelector('.min-hand');
     const hourHand = document.querySelector('.hour-hand');
+
+    // Select elements for binary clock
+    const binary = document.querySelector('.binary');
+
+    const secondsOnesOne = document.querySelector('.seconds .ones .one');
+    const secondsOnesTwo = document.querySelector('.seconds .ones .two');
+    const secondsOnesFour = document.querySelector('.seconds .ones .four');
+    const secondsOnesEight = document.querySelector('.seconds .ones .eight');
+
+    const secondsTensOne = document.querySelector('.seconds .tens .one');
+    const secondsTensTwo = document.querySelector('.seconds .tens .two');
+    const secondsTensFour = document.querySelector('.seconds .tens .four');
+    
+    const minutesOnesOne = document.querySelector('.minutes .ones .one');
+    const minutesOnesTwo = document.querySelector('.minutes .ones .two');
+    const minutesOnesFour = document.querySelector('.minutes .ones .four');
+    const minutesOnesEight = document.querySelector('.minutes .ones .eight');
+
+    const minutesTensOne = document.querySelector('.minutes .tens .one');
+    const minutesTensTwo = document.querySelector('.minutes .tens .two');
+    const minutesTensFour = document.querySelector('.minutes .tens .four');
+    
+    const hoursOnesOne = document.querySelector('.hours .ones .one');
+    const hoursOnesTwo = document.querySelector('.hours .ones .two');
+    const hoursOnesFour = document.querySelector('.hours .ones .four');
+    const hoursOnesEight = document.querySelector('.hours .ones .eight');
+
+    const hoursTensOne = document.querySelector('.hours .tens .one');
+    const hoursTensTwo = document.querySelector('.hours .tens .two');
+    
+    // Select MODE button
+    const button = document.querySelector('.button');
+
     function setDate() {
+      // Get and set the current time
       const now = new Date();
       const seconds = now.getSeconds();
-      const secondsDegrees = ((seconds / 60) * 360) + 90;
-      secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
-
       const mins = now.getMinutes();
-      const minsDegrees = ((mins / 60) * 360) + 90;
-      minHand.style.transform = `rotate(${minsDegrees}deg)`;
-
       const hours = now.getHours();
-      const hoursDegrees = ((hours / 12) * 360) + 90;
-      hourHand.style.transform = `rotate(${hoursDegrees}deg)`;
+
+      binary.classList.contains('off') ?
+        runClock()
+      :
+        runBinary()
+      ;
+
+      function runClock() {
+        // Make the analogue clock run
+        const secondsDegrees = ((seconds / 60) * 360) + 90;
+        secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
+
+        const minsDegrees = ((mins / 60) * 360) + 90;
+        minHand.style.transform = `rotate(${minsDegrees}deg)`;
+
+        const hoursDegrees = ((hours / 12) * 360) + 90;
+        hourHand.style.transform = `rotate(${hoursDegrees}deg)`;
+      }
+
+      function runBinary() {
+        // Isolate the tens and ones places
+        const secondsOnes = seconds % 10;
+        const secondsTens = Math.floor(seconds / 10);
+        const minutesOnes = mins % 10;
+        const minutesTens = Math.floor(mins / 10);
+        const hoursOnes = hours % 10;
+        const hoursTens = Math.floor(hours / 10);
+
+        // Activate the binary indicators to display decimal values
+        function binaryOnes(decimal, element) {
+          decimal % 2 == 1 ?
+            element.classList.add('active')
+          :
+            element.classList.remove('active')
+          ;
+        }
+
+        function binaryTwos(decimal, element) {
+          Math.floor(decimal / 2) % 2 == 1 ?
+            element.classList.add('active')
+          :
+            element.classList.remove('active')
+          ;
+        }
+
+        function binaryFours(decimal, element) {
+          Math.floor(decimal / 4) % 2 == 1 ?
+            element.classList.add('active')
+          :
+            element.classList.remove('active')
+          ;
+        }
+
+        function binaryEights(decimal, element) {
+          Math.floor(decimal / 8) % 2 == 1 ?
+            element.classList.add('active')
+          :
+            element.classList.remove('active')
+          ;
+        }
+
+        // Display the time using the binary indicators
+        binaryOnes(secondsOnes, secondsOnesOne);
+        binaryTwos(secondsOnes, secondsOnesTwo);
+        binaryFours(secondsOnes, secondsOnesFour);
+        binaryEights(secondsOnes, secondsOnesEight);
+
+        binaryOnes(secondsTens, secondsTensOne);
+        binaryTwos(secondsTens, secondsTensTwo);
+        binaryFours(secondsTens, secondsTensFour);
+
+        binaryOnes(minutesOnes, minutesOnesOne);
+        binaryTwos(minutesOnes, minutesOnesTwo);
+        binaryFours(minutesOnes, minutesOnesFour);
+        binaryEights(minutesOnes, minutesOnesEight);
+
+        binaryOnes(minutesTens, minutesTensOne);
+        binaryTwos(minutesTens, minutesTensTwo);
+        binaryFours(minutesTens, minutesTensFour);
+
+        binaryOnes(hoursOnes, hoursOnesOne);
+        binaryTwos(hoursOnes, hoursOnesTwo);
+        binaryFours(hoursOnes, hoursOnesFour);
+        binaryEights(hoursOnes, hoursOnesEight);
+
+        binaryOnes(hoursTens, hoursTensOne);
+        binaryTwos(hoursTens, hoursTensTwo);
+
+        // Control seconds ones column twos
+        switch (secondsOnes) {
+          case 2:
+           secondsOnesTwo.classList.add('active');
+           break;
+          case 3:
+           secondsOnesTwo.classList.add('active');
+           break;
+          case 6:
+           secondsOnesTwo.classList.add('active');
+           break;
+          case 7:
+           secondsOnesTwo.classList.add('active');
+           break;
+          default:
+           secondsOnesTwo.classList.remove('active');
+        }
+
+        // Control seconds ones column fours
+        switch (secondsOnes) {
+          case 4:
+           secondsOnesFour.classList.add('active');
+           break;
+          case 5:
+           secondsOnesFour.classList.add('active');
+           break;
+          case 6:
+           secondsOnesFour.classList.add('active');
+           break;
+          case 7:
+           secondsOnesFour.classList.add('active');
+           break;
+          default:
+           secondsOnesFour.classList.remove('active');
+        }
+
+        // Control seconds ones column eights
+        switch (secondsOnes) {
+          case 4:
+           secondsOnesFour.classList.add('active');
+           break;
+          case 5:
+           secondsOnesFour.classList.add('active');
+           break;
+          case 6:
+           secondsOnesFour.classList.add('active');
+           break;
+          case 7:
+           secondsOnesFour.classList.add('active');
+           break;
+          default:
+           secondsOnesFour.classList.remove('active');
+        }
+      }
+    }
+
+    function toggleMode() {
+      clock.classList.toggle('off');
+      binary.classList.toggle('off');
     }
 
     setInterval(setDate, 1000);
+    button.addEventListener('click', toggleMode);
 
   </script>
 </body>
