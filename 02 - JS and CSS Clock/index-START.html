@@ -237,6 +237,7 @@
       const mins = now.getMinutes();
       const hours = now.getHours();
 
+      // Detect which clock mode is currently active
       binary.classList.contains('off') ?
         runClock()
       :
@@ -323,60 +324,6 @@
 
         binaryOnes(hoursTens, hoursTensOne);
         binaryTwos(hoursTens, hoursTensTwo);
-
-        // Control seconds ones column twos
-        switch (secondsOnes) {
-          case 2:
-           secondsOnesTwo.classList.add('active');
-           break;
-          case 3:
-           secondsOnesTwo.classList.add('active');
-           break;
-          case 6:
-           secondsOnesTwo.classList.add('active');
-           break;
-          case 7:
-           secondsOnesTwo.classList.add('active');
-           break;
-          default:
-           secondsOnesTwo.classList.remove('active');
-        }
-
-        // Control seconds ones column fours
-        switch (secondsOnes) {
-          case 4:
-           secondsOnesFour.classList.add('active');
-           break;
-          case 5:
-           secondsOnesFour.classList.add('active');
-           break;
-          case 6:
-           secondsOnesFour.classList.add('active');
-           break;
-          case 7:
-           secondsOnesFour.classList.add('active');
-           break;
-          default:
-           secondsOnesFour.classList.remove('active');
-        }
-
-        // Control seconds ones column eights
-        switch (secondsOnes) {
-          case 4:
-           secondsOnesFour.classList.add('active');
-           break;
-          case 5:
-           secondsOnesFour.classList.add('active');
-           break;
-          case 6:
-           secondsOnesFour.classList.add('active');
-           break;
-          case 7:
-           secondsOnesFour.classList.add('active');
-           break;
-          default:
-           secondsOnesFour.classList.remove('active');
-        }
       }
     }
 
